@@ -3,10 +3,10 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { AlertTriangle, CheckCircle2, Leaf, MessageCircle, Plus } from "lucide-react";
 import { StatusBadge, STATUS_CLASS } from "@/components/StatusBadge";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/Dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import {
