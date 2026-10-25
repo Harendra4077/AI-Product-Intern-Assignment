@@ -10,6 +10,7 @@ import {
 } from "@tanstack/react-router";
 import { type ReactNode } from "react";
 
+import { isSupabaseConfigured } from "@/integrations/supabase/config";
 import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 
@@ -119,7 +120,15 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+      {!isSupabaseConfigured && (
+        <div
+          role="alert"
+          className="border-b border-amber-300 bg-amber-50 px-4 py-3 text-center text-sm text-amber-950"
+        >
+          Appointments are not connected yet. Set <code>VITE_SUPABASE_URL</code> and{" "}
+          <code>VITE_SUPABASE_PUBLISHABLE_KEY</code> in Vercel, then redeploy.
+        </div>
+      )}
       <Outlet />
       <Toaster position="top-center" richColors />
     </QueryClientProvider>

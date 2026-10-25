@@ -12,6 +12,29 @@ export default defineConfig(({ command, mode }) => {
     define[`import.meta.env.${key}`] = JSON.stringify(value);
   }
 
+  const env = loadEnv(mode, process.cwd(), "");
+  const configuredValue = (...values: (string | undefined)[]) =>
+    values
+      .find((value) => {
+        const normalized = value?.trim().toLowerCase();
+        return (
+          normalized && !normalized.includes("your-project-id") && !normalized.startsWith("your-")
+        );
+      })
+      ?.trim();
+
+  define["import.meta.env.VITE_SUPABASE_URL"] = JSON.stringify(
+    configuredValue(env.VITE_SUPABASE_URL, env.SUPABASE_URL) ?? "",
+  );
+  define["import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY"] = JSON.stringify(
+    configuredValue(
+      env.VITE_SUPABASE_PUBLISHABLE_KEY,
+      env.VITE_SUPABASE_ANON_KEY,
+      env.SUPABASE_PUBLISHABLE_KEY,
+      env.SUPABASE_ANON_KEY,
+    ) ?? "",
+  );
+
   const plugins: PluginOption[] = [
     tailwindcss(),
     tsConfigPaths({ projects: ["./tsconfig.json"] }),

@@ -1,6 +1,47 @@
-import { r as HTTPResponse } from "../_libs/h3+rou3+srvx.mjs";
+import { t as serverFetch } from "../index.mjs";
+import { t as renderToResponse } from "../_libs/rendu.mjs";
 //#region #nitro/virtual/renderer-template
-var rendererTemplate = () => new HTTPResponse("<!doctype html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <link rel=\"icon\" type=\"image/svg+xml\" href=\"/favicon.svg\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <meta name=\"description\" content=\"Kayro – Wellness appointment management platform for nutritionists and their clients. Book consultations, track attendance, and never miss a session.\" />\n    <meta name=\"keywords\" content=\"nutrition, appointment booking, wellness, health, consultation\" />\n    <meta name=\"theme-color\" content=\"#354B3C\" />\n\n    <!-- Open Graph -->\n    <meta property=\"og:title\" content=\"Kayro – Wellness Appointment Platform\" />\n    <meta property=\"og:description\" content=\"Book and manage nutrition consultations with ease.\" />\n    <meta property=\"og:type\" content=\"website\" />\n\n    <!-- Google Fonts preconnect -->\n    <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\" />\n    <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin />\n\n    <title>Kayro – Wellness Appointments</title>\n  </head>\n  <body>\n    <div id=\"root\"></div>\n    <script type=\"module\" src=\"/src/main.tsx\"><\/script>\n  </body>\n</html>\n", { headers: { "content-type": "text/html; charset=utf-8" } });
+var template = (async (__context__) => {
+	const __chunks__ = [];
+	const echo = (chunk) => {
+		__chunks__.push(chunk);
+	};
+	const { htmlspecialchars, setCookie, redirect, $REQUEST, $METHOD, $URL, $HEADERS, $COOKIES, $RESPONSE } = __context__;
+	echo(globalThis.__nitro_vite_envs__?.["ssr"]?.fetch($REQUEST) || "");
+	echo("\n");
+	function concatStreams(chunks) {
+		const encoder = new TextEncoder();
+		return new ReadableStream({ async pull(controller) {
+			for (let chunk of chunks) {
+				if (typeof chunk === "function") chunk = chunk();
+				if (chunk instanceof Promise) {
+					chunk = await chunk;
+					if (!chunk) continue;
+					if (chunk instanceof Response) chunk = chunk.body;
+					if (!(chunk instanceof ReadableStream)) {
+						controller.enqueue(chunk instanceof Uint8Array ? chunk : encoder.encode(chunk));
+						continue;
+					}
+				}
+				if (chunk instanceof ReadableStream) {
+					const reader = chunk.getReader();
+					while (true) {
+						const { value, done } = await reader.read();
+						if (done) break;
+						controller.enqueue(value);
+					}
+					reader.releaseLock();
+				} else controller.enqueue(chunk instanceof Uint8Array ? chunk : encoder.encode(chunk));
+			}
+			controller.close();
+		} });
+	}
+	return concatStreams(__chunks__);
+});
+var rendererTemplate = (request) => renderToResponse(template, {
+	request,
+	context: { serverFetch }
+});
 //#endregion
 //#region node_modules/nitro/dist/runtime/internal/routes/renderer-template.mjs
 function renderIndexHTML(event) {

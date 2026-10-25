@@ -45,7 +45,7 @@ Nourish is a two-sided appointments app for a wellness practice: a **client app*
    VITE_SUPABASE_PUBLISHABLE_KEY=<your publishable (anon) key>
    VITE_SUPABASE_PROJECT_ID=<your project ref>
    ```
-   (The server-side `SUPABASE_URL` / `SUPABASE_PUBLISHABLE_KEY` / `SUPABASE_PROJECT_ID` counterparts are read inside server functions. Add them to your server environment as well.)
+   On Vercel, add `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` under **Project Settings → Environment Variables**, enable them for the deployment environment, and redeploy. Without them the app displays a setup notice and skips appointment requests.
 3. **Database schema** — all tables, policies and seed data live in SQL migration files under `drizzle/migrations/` (e.g. `0000_migration.sql` creates the `appointments` table, its RLS policies, the anti-double-booking unique index, the realtime publication and the five sample rows). Apply the migration SQL to your database.
 4. **Run the dev server**:
    ```bash

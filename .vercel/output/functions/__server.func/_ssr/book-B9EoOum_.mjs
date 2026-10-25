@@ -1,6 +1,6 @@
 import { _ as createFileRoute, g as lazyRouteComponent } from "../_libs/@tanstack/react-router+[...].mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/book-BRY59kNX.js
-var $$splitComponentImporter = () => import("./book-BTjrGNvb.mjs");
+//#region node_modules/.nitro/vite/services/ssr/assets/book-B9EoOum_.js
+var $$splitComponentImporter = () => import("./book-BqwTCIIm.mjs");
 var Route = createFileRoute("/book")({
 	validateSearch: (s) => typeof s["reschedule"] === "string" ? { reschedule: s["reschedule"] } : {},
 	head: () => ({ meta: [

@@ -3,13 +3,13 @@ import { u as require_react } from "../_libs/@floating-ui/react-dom+[...].mjs";
 import { y as Link } from "../_libs/@tanstack/react-router+[...].mjs";
 import { P as require_jsx_runtime, _ as DialogTrigger$1, d as DialogClose, f as DialogContent$1, g as DialogTitle$1, h as DialogPortal$1, m as DialogOverlay$1, p as DialogDescription$1, u as Dialog$1 } from "../_libs/@radix-ui/react-alert-dialog+[...].mjs";
 import { a as MessageCircle, d as CircleCheck, f as ChevronUp, i as Plus, m as Check, n as TriangleAlert, p as ChevronDown, s as Leaf, t as X } from "../_libs/lucide-react.mjs";
-import { _ as updateAppointment, b as useNow, d as formatDateLong, f as formatPhone, g as toISODate, h as normalizePhone, i as STATUS_LABEL, l as cn, m as noShowCount, n as DASHBOARD_STATUSES, o as apptDateTime, p as formatTime, r as SLOTS, s as availableSlots, t as Button, u as createAppointment, v as useAppointments, x as whatsappReminderLink } from "./appointments-api-BHn2ctuq.mjs";
-import { n as StatusBadge, t as STATUS_CLASS } from "./StatusBadge-Bplv9GEN.mjs";
+import { _ as updateAppointment, b as useNow, d as formatDateLong, f as formatPhone, g as toISODate, h as normalizePhone, i as STATUS_LABEL, l as cn, m as noShowCount, n as DASHBOARD_STATUSES, o as apptDateTime, p as formatTime, r as SLOTS, s as availableSlots, t as Button, u as createAppointment, v as useAppointments, x as whatsappReminderLink } from "./appointments-api-Dz8aRK4k.mjs";
+import { n as StatusBadge, t as STATUS_CLASS } from "./StatusBadge-B_W-o2-o.mjs";
 import { n as toast } from "../_libs/sonner.mjs";
-import { t as Input } from "./input-B4Hiz6zU.mjs";
-import { t as Label } from "./label-o23fLurI.mjs";
+import { t as Input } from "./input-Cn6lbiEq.mjs";
+import { t as Label } from "./label-DGboPD0T.mjs";
 import { a as SelectItemIndicator, c as SelectPortal, d as SelectSeparator$1, f as SelectTrigger$1, i as SelectItem$1, l as SelectScrollDownButton$1, n as SelectContent$1, o as SelectItemText, p as SelectViewport, r as SelectIcon, s as SelectLabel$1, t as Select$1, u as SelectScrollUpButton$1 } from "../_libs/@radix-ui/react-select+[...].mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/dashboard-ZPYQpIzz.js
+//#region node_modules/.nitro/vite/services/ssr/assets/dashboard-B0uY7Myb.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 var Dialog = Dialog$1;

@@ -1,5 +1,5 @@
 globalThis.__nitro_main__ = import.meta.url;
-import { i as defineLazyEventHandler, n as HTTPError, t as H3Core } from "./_libs/h3+rou3+srvx.mjs";
+import { i as toRequest, n as HTTPError, r as defineLazyEventHandler, t as H3Core } from "./_libs/h3+rou3+srvx.mjs";
 import { r as NodeResponse } from "./_libs/h3-v2+rou3+srvx.mjs";
 //#region #nitro-vite-setup
 function lazyService(loader) {
@@ -153,6 +153,19 @@ function useNitroApp() {
 	globalThis.__nitro__[APP_ID] = instance;
 	return instance;
 }
+function serverFetch(resource, init, context) {
+	const req = toRequest(resource, init);
+	req.context = {
+		...req.context,
+		...context
+	};
+	const appHandler = useNitroApp().fetch;
+	try {
+		return Promise.resolve(appHandler(req));
+	} catch (error) {
+		return Promise.reject(error);
+	}
+}
 function getRouteRules(method, pathname) {
 	const m = findRouteRules(method, pathname);
 	if (!m?.length) return { routeRuleMiddleware: [] };
@@ -229,4 +242,4 @@ var vercel_web_default = { fetch(req, context) {
 	return nitroApp.fetch(req);
 } };
 //#endregion
-export { vercel_web_default as default };
+export { vercel_web_default as default, serverFetch as t };

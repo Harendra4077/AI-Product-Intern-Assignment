@@ -1,5 +1,5 @@
 import { t as createClient } from "../_libs/supabase__supabase-js.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/client-Bjze75_W.js
+//#region node_modules/.nitro/vite/services/ssr/assets/client-B-OG9xlQ.js
 function isNewSupabaseApiKey(value) {
 	return value.startsWith("sb_publishable_") || value.startsWith("sb_secret_");
 }
@@ -51,7 +51,7 @@ function createSupabaseClient() {
 		"VITE_SUPABASE_ANON_KEY": "your-anon-key-here",
 		"VITE_SUPABASE_PROJECT_ID": "sywhguqnagpofytwupfr",
 		"VITE_SUPABASE_PUBLISHABLE_KEY": "sb_publishable_DOEghyNlDNaX2DHRogFfxg_hY9Ls_tP",
-		"VITE_SUPABASE_URL": "https://your-project-id.supabase.co"
+		"VITE_SUPABASE_URL": "https://sywhguqnagpofytwupfr.supabase.co"
 	}["VITE_SUPABASE_URL"] || process.env["SUPABASE_URL"];
 	const SUPABASE_PUBLISHABLE_KEY = {
 		"BASE_URL": "/",
@@ -69,7 +69,7 @@ function createSupabaseClient() {
 		"VITE_SUPABASE_ANON_KEY": "your-anon-key-here",
 		"VITE_SUPABASE_PROJECT_ID": "sywhguqnagpofytwupfr",
 		"VITE_SUPABASE_PUBLISHABLE_KEY": "sb_publishable_DOEghyNlDNaX2DHRogFfxg_hY9Ls_tP",
-		"VITE_SUPABASE_URL": "https://your-project-id.supabase.co"
+		"VITE_SUPABASE_URL": "https://sywhguqnagpofytwupfr.supabase.co"
 	}["VITE_SUPABASE_PUBLISHABLE_KEY"] || process.env["SUPABASE_PUBLISHABLE_KEY"];
 	if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
 		const message = `Missing Supabase environment variable(s): ${[...!SUPABASE_URL ? ["SUPABASE_URL"] : [], ...!SUPABASE_PUBLISHABLE_KEY ? ["SUPABASE_PUBLISHABLE_KEY"] : []].join(", ")}.`;

@@ -1,11 +1,12 @@
 import { r as __toESM } from "../_runtime.mjs";
 import { u as require_react } from "../_libs/@floating-ui/react-dom+[...].mjs";
 import { P as require_jsx_runtime, j as Slot } from "../_libs/@radix-ui/react-alert-dialog+[...].mjs";
-import { t as supabase } from "./client-Bjze75_W.mjs";
+import { t as isSupabaseConfigured } from "./config-BppK9Tuc.mjs";
+import { t as supabase } from "./client-B-OG9xlQ.mjs";
 import { r as useQueryClient, t as useQuery } from "../_libs/tanstack__react-query.mjs";
 import { n as clsx, t as cva } from "../_libs/class-variance-authority+clsx.mjs";
 import { t as twMerge } from "../_libs/tailwind-merge.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/appointments-api-BHn2ctuq.js
+//#region node_modules/.nitro/vite/services/ssr/assets/appointments-api-Dz8aRK4k.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 function cn(...inputs) {
@@ -148,6 +149,7 @@ async function fetchAll() {
 function useAppointments() {
 	const qc = useQueryClient();
 	(0, import_react.useEffect)(() => {
+		if (!isSupabaseConfigured) return;
 		const ch = supabase.channel(`appts-${Math.random().toString(36).slice(2)}`).on("postgres_changes", {
 			event: "*",
 			schema: "public",
@@ -159,7 +161,8 @@ function useAppointments() {
 	}, [qc]);
 	return useQuery({
 		queryKey: KEY,
-		queryFn: fetchAll
+		queryFn: fetchAll,
+		enabled: isSupabaseConfigured
 	});
 }
 function friendly(error) {

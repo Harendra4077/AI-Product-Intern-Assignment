@@ -1,10 +1,11 @@
 import { _ as createFileRoute, d as Scripts, f as HeadContent, g as lazyRouteComponent, h as Outlet, m as createRouter, v as createRootRouteWithContext, x as useRouter, y as Link } from "../_libs/@tanstack/react-router+[...].mjs";
 import { P as require_jsx_runtime } from "../_libs/@radix-ui/react-alert-dialog+[...].mjs";
+import { t as isSupabaseConfigured } from "./config-BppK9Tuc.mjs";
 import { t as QueryClient } from "../_libs/tanstack__query-core.mjs";
 import { n as QueryClientProvider } from "../_libs/tanstack__react-query.mjs";
 import { t as Toaster } from "../_libs/sonner.mjs";
-import { t as Route$4 } from "./book-BRY59kNX.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-B2JWrlR6.js
+import { t as Route$4 } from "./book-B9EoOum_.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/router-gE8BWl6G.js
 var import_jsx_runtime = require_jsx_runtime();
 var Toaster$1 = ({ ...props }) => {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toaster, {
@@ -18,7 +19,7 @@ var Toaster$1 = ({ ...props }) => {
 		...props
 	});
 };
-var styles_default = "/assets/styles-FQR0PVco.css";
+var styles_default = "/assets/styles-C6mUHobD.css";
 function NotFoundComponent() {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 		className: "flex min-h-screen items-center justify-center bg-background px-4",
@@ -146,13 +147,28 @@ function RootComponent() {
 	const { queryClient } = Route$3.useRouteContext();
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(QueryClientProvider, {
 		client: queryClient,
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Outlet, {}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toaster$1, {
-			position: "top-center",
-			richColors: true
-		})]
+		children: [
+			!isSupabaseConfigured && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				role: "alert",
+				className: "border-b border-amber-300 bg-amber-50 px-4 py-3 text-center text-sm text-amber-950",
+				children: [
+					"Appointments are not connected yet. Set ",
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", { children: "VITE_SUPABASE_URL" }),
+					" and",
+					" ",
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", { children: "VITE_SUPABASE_PUBLISHABLE_KEY" }),
+					" in Vercel, then redeploy."
+				]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Outlet, {}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toaster$1, {
+				position: "top-center",
+				richColors: true
+			})
+		]
 	});
 }
-var $$splitComponentImporter$2 = () => import("./routes-PiywT9Z-.mjs");
+var $$splitComponentImporter$2 = () => import("./routes-RrM23qIK.mjs");
 var Route$2 = createFileRoute("/")({
 	head: () => ({ meta: [
 		{ title: "Nourish — Your next nutrition consultation" },
@@ -179,7 +195,7 @@ var Route$2 = createFileRoute("/")({
 	] }),
 	component: lazyRouteComponent($$splitComponentImporter$2, "component")
 });
-var $$splitComponentImporter$1 = () => import("./appointments-w0KURmka.mjs");
+var $$splitComponentImporter$1 = () => import("./appointments-PHFu3koA.mjs");
 var Route$1 = createFileRoute("/appointments")({
 	head: () => ({ meta: [
 		{ title: "My visits — Nourish" },
@@ -206,7 +222,7 @@ var Route$1 = createFileRoute("/appointments")({
 	] }),
 	component: lazyRouteComponent($$splitComponentImporter$1, "component")
 });
-var $$splitComponentImporter = () => import("./dashboard-ZPYQpIzz.mjs");
+var $$splitComponentImporter = () => import("./dashboard-B0uY7Myb.mjs");
 var Route = createFileRoute("/dashboard")({
 	ssr: false,
 	head: () => ({ meta: [

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { isSupabaseConfigured } from "@/integrations/supabase/config";
 import type { Appointment, Status } from "./appointments";
 
 const KEY = ["appointments"];
@@ -19,6 +20,7 @@ async function fetchAll(): Promise<Appointment[]> {
 export function useAppointments() {
   const qc = useQueryClient();
   useEffect(() => {
+    if (!isSupabaseConfigured) return;
     const ch = supabase
       .channel(`appts-${Math.random().toString(36).slice(2)}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "appointments" }, () =>
@@ -29,7 +31,7 @@ export function useAppointments() {
       supabase.removeChannel(ch);
     };
   }, [qc]);
-  return useQuery({ queryKey: KEY, queryFn: fetchAll });
+  return useQuery({ queryKey: KEY, queryFn: fetchAll, enabled: isSupabaseConfigured });
 }
 
 function friendly(error: { code?: string; message: string }): Error {
