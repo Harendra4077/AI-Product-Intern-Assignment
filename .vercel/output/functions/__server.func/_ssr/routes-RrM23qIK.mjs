@@ -1,7 +1,7 @@
 import { r as __toESM } from "../_runtime.mjs";
 import { u as require_react } from "../_libs/@floating-ui/react-dom+[...].mjs";
 import { y as Link } from "../_libs/@tanstack/react-router+[...].mjs";
-import { P as require_jsx_runtime } from "../_libs/@radix-ui/react-alert-dialog+[...].mjs";
+import { I as require_jsx_runtime } from "../_libs/@radix-ui/react-alert-dialog+[...].mjs";
 import { d as CircleCheck, g as CalendarCheck, h as CalendarPlus, l as Droplets, r as Salad, u as Clock } from "../_libs/lucide-react.mjs";
 import { t as ClientShell } from "./ClientShell-v85r9nEe.mjs";
 import { _ as updateAppointment, b as useNow, d as formatDateLong, h as normalizePhone, o as apptDateTime, p as formatTime, t as Button, v as useAppointments, y as useMe } from "./appointments-api-Dz8aRK4k.mjs";

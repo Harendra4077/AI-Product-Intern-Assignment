@@ -1,6 +1,6 @@
 import { r as __toESM } from "../_runtime.mjs";
 import { u as require_react } from "../_libs/@floating-ui/react-dom+[...].mjs";
-import { P as require_jsx_runtime, j as Slot } from "../_libs/@radix-ui/react-alert-dialog+[...].mjs";
+import { I as require_jsx_runtime, j as Slot } from "../_libs/@radix-ui/react-alert-dialog+[...].mjs";
 import { t as isSupabaseConfigured } from "./config-BppK9Tuc.mjs";
 import { t as supabase } from "./client-B-OG9xlQ.mjs";
 import { r as useQueryClient, t as useQuery } from "../_libs/tanstack__react-query.mjs";

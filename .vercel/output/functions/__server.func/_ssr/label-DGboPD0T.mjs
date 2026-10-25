@@ -1,6 +1,6 @@
 import { r as __toESM } from "../_runtime.mjs";
 import { u as require_react } from "../_libs/@floating-ui/react-dom+[...].mjs";
-import { P as require_jsx_runtime } from "../_libs/@radix-ui/react-alert-dialog+[...].mjs";
+import { I as require_jsx_runtime } from "../_libs/@radix-ui/react-alert-dialog+[...].mjs";
 import { t as cva } from "../_libs/class-variance-authority+clsx.mjs";
 import { l as cn } from "./appointments-api-Dz8aRK4k.mjs";
 import { t as Label$1 } from "../_libs/radix-ui__react-label.mjs";

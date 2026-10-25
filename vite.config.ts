@@ -52,7 +52,7 @@ export default defineConfig(({ command, mode }) => {
   // Nitro builds the deployable server bundle on production builds, defaulting to
   // Cloudflare but still honoring platform detection (NITRO_PRESET, Vercel, Netlify…).
   if (command === "build") {
-    plugins.push(nitro({ defaultPreset: "cloudflare-module" }));
+    plugins.push(nitro({ defaultPreset: "cloudflare-module", noExternals: ["tslib"] }));
   }
 
   plugins.push(viteReact());

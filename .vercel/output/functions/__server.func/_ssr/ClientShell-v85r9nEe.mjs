@@ -1,7 +1,7 @@
 import { r as __toESM } from "../_runtime.mjs";
 import { u as require_react } from "../_libs/@floating-ui/react-dom+[...].mjs";
 import { y as Link } from "../_libs/@tanstack/react-router+[...].mjs";
-import { P as require_jsx_runtime } from "../_libs/@radix-ui/react-alert-dialog+[...].mjs";
+import { I as require_jsx_runtime } from "../_libs/@radix-ui/react-alert-dialog+[...].mjs";
 import { c as House, h as CalendarPlus, o as ListChecks, s as Leaf } from "../_libs/lucide-react.mjs";
 //#region node_modules/.nitro/vite/services/ssr/assets/ClientShell-v85r9nEe.js
 var import_react = /* @__PURE__ */ __toESM(require_react());

@@ -1,4 +1,4 @@
-import { P as require_jsx_runtime } from "../_libs/@radix-ui/react-alert-dialog+[...].mjs";
+import { I as require_jsx_runtime } from "../_libs/@radix-ui/react-alert-dialog+[...].mjs";
 import { i as STATUS_LABEL, l as cn } from "./appointments-api-Dz8aRK4k.mjs";
 //#region node_modules/.nitro/vite/services/ssr/assets/StatusBadge-B_W-o2-o.js
 var import_jsx_runtime = require_jsx_runtime();

@@ -1,7 +1,7 @@
 import { r as __toESM } from "../_runtime.mjs";
 import { u as require_react } from "../_libs/@floating-ui/react-dom+[...].mjs";
 import { y as Link } from "../_libs/@tanstack/react-router+[...].mjs";
-import { P as require_jsx_runtime, _ as DialogTrigger$1, d as DialogClose, f as DialogContent$1, g as DialogTitle$1, h as DialogPortal$1, m as DialogOverlay$1, p as DialogDescription$1, u as Dialog$1 } from "../_libs/@radix-ui/react-alert-dialog+[...].mjs";
+import { I as require_jsx_runtime, _ as DialogTrigger$1, d as DialogClose, f as DialogContent$1, g as DialogTitle$1, h as DialogPortal$1, m as DialogOverlay$1, p as DialogDescription$1, u as Dialog$1 } from "../_libs/@radix-ui/react-alert-dialog+[...].mjs";
 import { a as MessageCircle, d as CircleCheck, f as ChevronUp, i as Plus, m as Check, n as TriangleAlert, p as ChevronDown, s as Leaf, t as X } from "../_libs/lucide-react.mjs";
 import { _ as updateAppointment, b as useNow, d as formatDateLong, f as formatPhone, g as toISODate, h as normalizePhone, i as STATUS_LABEL, l as cn, m as noShowCount, n as DASHBOARD_STATUSES, o as apptDateTime, p as formatTime, r as SLOTS, s as availableSlots, t as Button, u as createAppointment, v as useAppointments, x as whatsappReminderLink } from "./appointments-api-Dz8aRK4k.mjs";
 import { n as StatusBadge, t as STATUS_CLASS } from "./StatusBadge-B_W-o2-o.mjs";
