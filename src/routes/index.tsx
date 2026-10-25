@@ -3,7 +3,7 @@ import { useState } from "react";
 import { CalendarCheck, CalendarPlus, CheckCircle2, Clock, Droplets, Salad } from "lucide-react";
 import { toast } from "sonner";
 import { ClientShell } from "@/components/ClientShell";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/input";
 import { apptDateTime, formatDateLong, formatTime, normalizePhone } from "@/lib/appointments";
 import { updateAppointment, useAppointments, useMe, useNow } from "@/lib/appointments-api";

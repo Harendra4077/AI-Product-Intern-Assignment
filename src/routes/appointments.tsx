@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import { CheckCircle2 } from "lucide-react";
 import { ClientShell } from "@/components/ClientShell";
 import { StatusBadge } from "@/components/StatusBadge";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription,
   AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
