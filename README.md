@@ -6,7 +6,7 @@ Nourish is a two-sided appointments app for a wellness practice: a **client app*
 
 ### Client app (no login)
 - **Next appointment at a glance** on the home page, with a time-until hint and a one-tap **"I'll be there"** confirmation.
-- **Booking**: pick a day (next 14 days), see only genuinely free 30-minute slots between 09:00–17:30, then enter name + phone. Taken slots are hidden, and double booking is blocked at the database level, not just in the UI.
+- **Booking**: pick a day (next 7 days), see only genuinely free 30-minute slots between 09:00–17:30, then enter name + phone. Taken slots are hidden, and double booking is blocked at the database level, not just in the UI.
 - **My visits**: upcoming appointments with **reschedule** (pick a new slot; the old one is freed) and **cancel** (with a gentle "rather move it?" prompt first).
 - **Remembered on-device**: clients are identified by their normalised 10-digit phone number stored locally — no accounts, no passwords.
 
