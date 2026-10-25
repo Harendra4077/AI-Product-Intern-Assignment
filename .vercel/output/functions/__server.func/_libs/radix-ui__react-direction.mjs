@@ -9,10 +9,14 @@ var __name = (target, value) => __defProp(target, "name", {
 	value,
 	configurable: true
 });
+var Direction = {
+	LTR: "ltr",
+	RTL: "rtl"
+};
 var DirectionContext = import_react.createContext(void 0);
 function useDirection(localDir) {
 	const globalDir = import_react.useContext(DirectionContext);
-	return localDir || globalDir || "ltr";
+	return localDir || globalDir || Direction.LTR;
 }
 __name(useDirection, "useDirection");
 //#endregion

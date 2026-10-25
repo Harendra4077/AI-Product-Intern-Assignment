@@ -1,4 +1,4 @@
-import { A as createInlineCssStyleAsset, B as decodePath, C as createStream, E as isStream, F as waitForReason, G as rootRouteId, I as _getRenderedMatches, M as getStylesheetHref, R as invariant, S as createPlugin, U as dehydrateSsrMatchId, k as createInlineCssPlaceholderAsset, l as createHydrationScripts, u as GLOBAL_TSR, w as crossSerializeStream, z as createSieveCache } from "./react-router+[...].mjs";
+import { C as createStream, F as _getRenderedMatches, H as dehydrateSsrMatchId, L as invariant, O as createInlineCssPlaceholderAsset, P as waitForReason, R as createSieveCache, S as createPlugin, W as rootRouteId, j as getStylesheetHref, k as createInlineCssStyleAsset, l as createHydrationScripts, u as GLOBAL_TSR, w as crossSerializeStream, z as decodePath } from "./react-router+[...].mjs";
 //#region node_modules/@tanstack/router-core/dist/esm/ssr/serializer/transformer.js
 /**
 * Create a strongly-typed serialization adapter for SSR hydration.
@@ -247,7 +247,7 @@ var RawStreamJSONDeserializePlugin = /* @__PURE__ */ createPlugin({
 	}
 });
 //#endregion
-//#region node_modules/seroval-plugins/dist/web-CDQeyEaf.js
+//#region node_modules/seroval-plugins/dist/web.js
 var READABLE_STREAM_FACTORY = {};
 var READABLE_STREAM_FACTORY_CONSTRUCTOR = (stream) => new ReadableStream({ start(controller) {
 	stream.on({
@@ -289,59 +289,82 @@ var ReadableStreamFactoryPlugin = /* @__PURE__ */ createPlugin({
 		return READABLE_STREAM_FACTORY;
 	}
 });
-async function drainStream(stream, reader) {
-	try {
-		while (true) {
-			const result = await reader.read();
-			if (result.done) {
-				stream.return(result.value);
+function toAsyncIterable(value) {
+	return { [Symbol.asyncIterator]() {
+		const reader = value.getReader();
+		let active = true;
+		let reading = false;
+		const release = () => {
+			try {
 				reader.releaseLock();
-				break;
+			} catch {}
+		};
+		return {
+			async next() {
+				if (!active) return {
+					done: true,
+					value: void 0
+				};
+				reading = true;
+				let result;
+				try {
+					result = await reader.read();
+				} catch (error) {
+					reading = false;
+					release();
+					if (!active) return {
+						done: true,
+						value: void 0
+					};
+					active = false;
+					throw error;
+				}
+				reading = false;
+				if (!active || result.done) {
+					active = false;
+					release();
+					return {
+						done: true,
+						value: void 0
+					};
+				}
+				return result;
+			},
+			return(reason) {
+				if (active) {
+					active = false;
+					try {
+						reader.cancel(reason).catch(() => {});
+					} catch {}
+					if (!reading) release();
+				}
+				return Promise.resolve({
+					done: true,
+					value: void 0
+				});
 			}
-			stream.next(result.value);
-		}
-	} catch (error) {
-		reader.releaseLock();
-		stream.throw(error);
-	}
-}
-function cleanupStream(reader) {
-	reader.cancel().catch(() => {});
-	reader.releaseLock();
-}
-function toStream(value) {
-	const stream = createStream();
-	const reader = value.getReader();
-	const cleanup = cleanupStream.bind(null, reader);
-	drainStream(stream, reader).catch(cleanup);
-	return [stream, cleanup];
+		};
+	} };
 }
 var ReadableStreamPlugin = /* @__PURE__ */ createPlugin({
 	tag: "seroval/plugins/web/ReadableStream",
 	extends: [ReadableStreamFactoryPlugin],
+	skipPlainObjects: true,
 	test(value) {
 		if (typeof ReadableStream === "undefined") return false;
 		return value instanceof ReadableStream;
 	},
 	parse: {
-		sync(_value, ctx) {
-			return {
-				factory: ctx.parse(READABLE_STREAM_FACTORY),
-				stream: ctx.parse(createStream())
-			};
-		},
 		async async(value, ctx) {
 			return {
 				factory: await ctx.parse(READABLE_STREAM_FACTORY),
-				stream: await ctx.parse(toStream(value)[0])
+				stream: await ctx.parseStreamSource(toAsyncIterable(value))
 			};
 		},
 		stream(value, ctx) {
-			const [stream, cleanup] = toStream(value);
-			ctx.addCleanup(cleanup);
 			return {
 				factory: ctx.parse(READABLE_STREAM_FACTORY),
-				stream: ctx.parse(stream)
+				stream: ctx.parseStreamSource(toAsyncIterable(value))
 			};
 		}
 	},
@@ -349,9 +372,7 @@ var ReadableStreamPlugin = /* @__PURE__ */ createPlugin({
 		return "(" + ctx.serialize(node.factory) + ")(" + ctx.serialize(node.stream) + ")";
 	},
 	deserialize(node, ctx) {
-		const stream = ctx.deserialize(node.stream);
-		if (!stream || typeof stream !== "object" || !isStream(stream)) throw new Error("Expected a stream source.");
-		return READABLE_STREAM_FACTORY_CONSTRUCTOR(stream);
+		return READABLE_STREAM_FACTORY_CONSTRUCTOR(ctx.deserialize(node.stream));
 	}
 });
 //#endregion

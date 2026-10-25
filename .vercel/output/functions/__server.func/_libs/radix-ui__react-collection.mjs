@@ -1,6 +1,6 @@
 import { r as __toESM } from "../_runtime.mjs";
 import { u as require_react } from "./@floating-ui/react-dom+[...].mjs";
-import { A as createContextScope, M as createSlot, N as useComposedRefs, P as require_jsx_runtime } from "./@radix-ui/react-alert-dialog+[...].mjs";
+import { A as createContextScope, M as createSlot, N as useComposedRefs, P as require_jsx_runtime, k as useLayoutEffect2 } from "./@radix-ui/react-alert-dialog+[...].mjs";
 //#region node_modules/@radix-ui/react-collection/dist/index.mjs
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var import_jsx_runtime = require_jsx_runtime();
@@ -96,40 +96,31 @@ var OrderedDict = class _OrderedDict extends Map {
 		__instanciated.set(this, true);
 	}
 	set(key, value) {
-		if (__instanciated.get(this)) if (this.has(key)) this.#keys[this.#keys.indexOf(key)] = key;
-		else this.#keys.push(key);
+		if (__instanciated.get(this) && !this.has(key)) this.#keys.push(key);
 		super.set(key, value);
 		return this;
 	}
+	/**
+	* Sets a key-value pair so that it ends up at the given index.
+	* - Existing keys are moved
+	* - Negative indices count from the end of the resulting dictionary, so
+	*   inserting at -1 makes the item the last one, -2 the second to last, etc.
+	* - Out-of-range indices are clamped
+	*/
 	insert(index, key, value) {
 		const has = this.has(key);
-		const length = this.#keys.length;
+		const finalSize = has ? this.size : this.size + 1;
 		const relativeIndex = toSafeInteger(index);
-		let actualIndex = relativeIndex >= 0 ? relativeIndex : length + relativeIndex;
-		const safeIndex = actualIndex < 0 || actualIndex >= length ? -1 : actualIndex;
-		if (safeIndex === this.size || has && safeIndex === this.size - 1 || safeIndex === -1) {
+		const targetIndex = relativeIndex >= 0 ? Math.min(relativeIndex, finalSize - 1) : Math.max(finalSize + relativeIndex, 0);
+		if (has ? this.#keys.indexOf(key) === targetIndex : targetIndex === this.size) {
 			this.set(key, value);
 			return this;
 		}
-		const size = this.size + (has ? 0 : 1);
-		if (relativeIndex < 0) actualIndex++;
-		const keys = [...this.#keys];
-		let nextValue;
-		let shouldSkip = false;
-		for (let i = actualIndex; i < size; i++) if (actualIndex === i) {
-			let nextKey = keys[i];
-			if (keys[i] === key) nextKey = keys[i + 1];
-			if (has) this.delete(key);
-			nextValue = this.get(nextKey);
-			this.set(key, value);
-		} else {
-			if (!shouldSkip && keys[i - 1] === key) shouldSkip = true;
-			const currentKey = keys[shouldSkip ? i : i - 1];
-			const currentValue = nextValue;
-			nextValue = this.get(currentKey);
-			this.delete(currentKey);
-			this.set(currentKey, currentValue);
-		}
+		const keys = this.#keys.filter((existingKey) => existingKey !== key);
+		keys.splice(targetIndex, 0, key);
+		const entries = keys.map((entryKey) => [entryKey, entryKey === key ? value : this.get(entryKey)]);
+		this.clear();
+		for (const [entryKey, entryValue] of entries) this.set(entryKey, entryValue);
 		return this;
 	}
 	with(index, key, value) {
@@ -148,7 +139,9 @@ var OrderedDict = class _OrderedDict extends Map {
 	setBefore(key, newKey, value) {
 		const index = this.#keys.indexOf(key);
 		if (index === -1) return this;
-		return this.insert(index, newKey, value);
+		const currentIndex = this.#keys.indexOf(newKey);
+		const targetIndex = currentIndex !== -1 && currentIndex < index ? index - 1 : index;
+		return this.insert(targetIndex, newKey, value);
 	}
 	after(key) {
 		let index = this.#keys.indexOf(key);
@@ -162,7 +155,9 @@ var OrderedDict = class _OrderedDict extends Map {
 	setAfter(key, newKey, value) {
 		const index = this.#keys.indexOf(key);
 		if (index === -1) return this;
-		return this.insert(index + 1, newKey, value);
+		const currentIndex = this.#keys.indexOf(newKey);
+		const targetIndex = currentIndex !== -1 && currentIndex <= index ? index : index + 1;
+		return this.insert(targetIndex, newKey, value);
 	}
 	first() {
 		return this.entryAt(0);
@@ -265,10 +260,12 @@ var OrderedDict = class _OrderedDict extends Map {
 	}
 	reduce(...args) {
 		const [callbackfn, initialValue] = args;
+		const hasInitialValue = args.length > 1;
+		if (!hasInitialValue && this.size === 0) throw new TypeError("Reduce of empty OrderedDict with no initial value");
 		let index = 0;
-		let accumulator = initialValue ?? this.at(0);
+		let accumulator = initialValue;
 		for (const entry of this) {
-			if (index === 0 && args.length === 1) accumulator = entry;
+			if (index === 0 && !hasInitialValue) accumulator = entry;
 			else accumulator = Reflect.apply(callbackfn, this, [
 				accumulator,
 				entry,
@@ -281,10 +278,12 @@ var OrderedDict = class _OrderedDict extends Map {
 	}
 	reduceRight(...args) {
 		const [callbackfn, initialValue] = args;
-		let accumulator = initialValue ?? this.at(-1);
+		const hasInitialValue = args.length > 1;
+		if (!hasInitialValue && this.size === 0) throw new TypeError("Reduce of empty OrderedDict with no initial value");
+		let accumulator = initialValue;
 		for (let index = this.size - 1; index >= 0; index--) {
-			const entry = this.at(index);
-			if (index === this.size - 1 && args.length === 1) accumulator = entry;
+			const entry = this.entryAt(index);
+			if (index === this.size - 1 && !hasInitialValue) accumulator = entry;
 			else accumulator = Reflect.apply(callbackfn, this, [
 				accumulator,
 				entry,
@@ -294,7 +293,30 @@ var OrderedDict = class _OrderedDict extends Map {
 		}
 		return accumulator;
 	}
+	/**
+	* Sorts the dictionary in place. This method mutates the dictionary and
+	* returns a reference to the same object
+	*
+	* @param compareFn Function used to determine the order of the elements. It
+	* is expected to return a negative value if the first argument is less than
+	* the second argument, zero if they're equal, and a positive value otherwise.
+	*/
+	sort(compareFn) {
+		if (typeof compareFn !== "function") throw new TypeError(`OrderedDict.sort requires a compare function`);
+		const entries = [...this.entries()].sort(compareFn);
+		this.clear();
+		for (const [key, value] of entries) this.set(key, value);
+		return this;
+	}
+	/**
+	* Returns a copy of the dictionary with its elements sorted.
+	*
+	* @param compareFn Function used to determine the order of the elements. It
+	* is expected to return a negative value if the first argument is less than
+	* the second argument, zero if they're equal, and a positive value otherwise.
+	*/
 	toSorted(compareFn) {
+		if (typeof compareFn !== "function") throw new TypeError(`OrderedDict.toSorted requires a compare function`);
 		const entries = [...this.entries()].sort(compareFn);
 		return new _OrderedDict(entries);
 	}
@@ -314,15 +336,7 @@ var OrderedDict = class _OrderedDict extends Map {
 	}
 	slice(start, end) {
 		const result = new _OrderedDict();
-		let stop = this.size - 1;
-		if (start === void 0) return result;
-		if (start < 0) start = start + this.size;
-		if (end !== void 0 && end > 0) stop = end - 1;
-		for (let index = start; index <= stop; index++) {
-			const key = this.keyAt(index);
-			const element = this.get(key);
-			result.set(key, element);
-		}
+		for (const key of this.#keys.slice(start, end)) result.set(key, this.get(key));
 		return result;
 	}
 	every(predicate, thisArg) {
@@ -371,13 +385,10 @@ __name(toSafeInteger, "toSafeInteger");
 function createCollection2(name) {
 	const PROVIDER_NAME = name + "CollectionProvider";
 	const [createCollectionContext, createCollectionScope] = createContextScope(PROVIDER_NAME);
-	const [CollectionContextProvider, useCollectionContext] = createCollectionContext(PROVIDER_NAME, {
-		collectionElement: null,
-		collectionRef: { current: null },
-		collectionRefObject: { current: null },
-		itemMap: new OrderedDict(),
-		setItemMap: /* @__PURE__ */ __name(() => void 0, "setItemMap")
-	});
+	const [CollectionStableContextProvider, useStableCollectionContext] = createCollectionContext(PROVIDER_NAME);
+	CollectionStableContextProvider.displayName = name + "CollectionStableContextProvider";
+	const [CollectionStatefulContextProvider, useStatefulCollectionContext] = createCollectionContext(PROVIDER_NAME);
+	CollectionStatefulContextProvider.displayName = name + "CollectionStatefulContextProvider";
 	const CollectionProvider = /* @__PURE__ */ __name(({ state, ...props }) => {
 		return state ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CollectionProviderImpl, {
 			...props,
@@ -392,16 +403,27 @@ function createCollection2(name) {
 			state
 		});
 	}, "CollectionInit");
-	CollectionInit.displayName = PROVIDER_NAME + "Init";
+	CollectionInit.displayName = name + "CollectionInit";
 	const CollectionProviderImpl = /* @__PURE__ */ __name((props) => {
 		const { scope, children, state } = props;
 		const ref = import_react.useRef(null);
 		const [collectionElement, setCollectionElement] = import_react.useState(null);
 		const composeRefs = useComposedRefs(ref, setCollectionElement);
-		const [itemMap, setItemMap] = state;
+		const [collection, setCollection] = state;
+		const registryRef = import_react.useRef(new OrderedDict());
+		const getCollection = import_react.useCallback(() => {
+			const registry = registryRef.current;
+			if (!isInDocumentOrder(registry)) registry.sort(sortByDocumentPosition);
+			return registry;
+		}, []);
 		import_react.useEffect(() => {
 			if (!collectionElement) return;
-			const observer = getChildListObserver(() => {});
+			const observer = getChildListObserver(() => {
+				setCollection((map) => {
+					const sorted = map.toSorted(sortByDocumentPosition);
+					return sorted.some(([key], index) => map.keyAt(index) !== key) ? sorted : map;
+				});
+			});
 			observer.observe(collectionElement, {
 				childList: true,
 				subtree: true
@@ -409,24 +431,29 @@ function createCollection2(name) {
 			return () => {
 				observer.disconnect();
 			};
-		}, [collectionElement]);
-		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CollectionContextProvider, {
+		}, [collectionElement, setCollection]);
+		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CollectionStableContextProvider, {
 			scope,
-			itemMap,
-			setItemMap,
-			collectionRef: composeRefs,
-			collectionRefObject: ref,
-			collectionElement,
-			children
+			collectionElementRef: composeRefs,
+			collectionElementRefObject: ref,
+			getCollection,
+			setCollection,
+			registryRef,
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CollectionStatefulContextProvider, {
+				scope,
+				collectionElement,
+				collection,
+				children
+			})
 		});
 	}, "CollectionProviderImpl");
-	CollectionProviderImpl.displayName = PROVIDER_NAME + "Impl";
+	CollectionProviderImpl.displayName = name + "CollectionProviderImpl";
 	const COLLECTION_SLOT_NAME = name + "CollectionSlot";
 	const CollectionSlotImpl = createSlot(COLLECTION_SLOT_NAME);
 	const CollectionSlot = import_react.forwardRef((props, forwardedRef) => {
 		const { scope, children } = props;
-		const context = useCollectionContext(COLLECTION_SLOT_NAME, scope);
-		const composedRefs = useComposedRefs(forwardedRef, context.collectionRef);
+		const context = useStableCollectionContext(COLLECTION_SLOT_NAME, scope);
+		const composedRefs = useComposedRefs(forwardedRef, context.collectionElementRef);
 		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CollectionSlotImpl, {
 			ref: composedRefs,
 			children
@@ -439,40 +466,59 @@ function createCollection2(name) {
 	const CollectionItemSlot = import_react.forwardRef((props, forwardedRef) => {
 		const { scope, children, ...itemData } = props;
 		const ref = import_react.useRef(null);
-		const [element, setElement] = import_react.useState(null);
-		const composedRefs = useComposedRefs(forwardedRef, ref, setElement);
-		const { setItemMap } = useCollectionContext(ITEM_SLOT_NAME, scope);
+		const { setCollection, registryRef } = useStableCollectionContext(ITEM_SLOT_NAME, scope);
 		const itemDataRef = import_react.useRef(itemData);
 		if (!shallowEqual(itemDataRef.current, itemData)) itemDataRef.current = itemData;
 		const memoizedItemData = itemDataRef.current;
-		import_react.useEffect(() => {
-			const itemData2 = memoizedItemData;
-			setItemMap((map) => {
-				if (!element) return map;
-				if (!map.has(element)) {
-					map.set(element, {
-						...itemData2,
-						element
-					});
-					return map.toSorted(sortByDocumentPosition);
-				}
-				return map.set(element, {
-					...itemData2,
-					element
-				}).toSorted(sortByDocumentPosition);
+		const registerElement = import_react.useCallback((node) => {
+			const registry = registryRef.current;
+			if (node) registry.set(node, {
+				...itemDataRef.current,
+				element: node
 			});
+			else if (ref.current) registry.delete(ref.current);
+		}, [registryRef]);
+		const composedRefs = useComposedRefs(forwardedRef, registerElement, ref);
+		useLayoutEffect2(() => {
+			const node = ref.current;
+			const registry = registryRef.current;
+			if (node && registry.has(node)) registry.set(node, {
+				...memoizedItemData,
+				element: node
+			});
+		}, [memoizedItemData, registryRef]);
+		const registeredRef = import_react.useRef(null);
+		import_react.useEffect(() => {
+			const element = ref.current;
+			const registered = registeredRef.current;
+			if ((registered?.element ?? null) === element && (!element || registered?.itemData === memoizedItemData)) return;
+			registeredRef.current = element ? {
+				element,
+				itemData: memoizedItemData
+			} : null;
+			setCollection((map) => {
+				const next = new OrderedDict(map);
+				if (registered && registered.element !== element) next.delete(registered.element);
+				if (element) next.set(element, {
+					...memoizedItemData,
+					element
+				});
+				return next.sort(sortByDocumentPosition);
+			});
+		});
+		import_react.useEffect(() => {
 			return () => {
-				setItemMap((map) => {
-					if (!element || !map.has(element)) return map;
-					map.delete(element);
-					return new OrderedDict(map);
+				const registered = registeredRef.current;
+				registeredRef.current = null;
+				if (!registered) return;
+				setCollection((map) => {
+					if (!map.has(registered.element)) return map;
+					const next = new OrderedDict(map);
+					next.delete(registered.element);
+					return next;
 				});
 			};
-		}, [
-			element,
-			memoizedItemData,
-			setItemMap
-		]);
+		}, [setCollection]);
 		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CollectionItemSlotImpl, {
 			[ITEM_DATA_ATTR]: "",
 			ref: composedRefs,
@@ -485,10 +531,15 @@ function createCollection2(name) {
 	}
 	__name(useInitCollection, "useInitCollection");
 	function useCollection(scope) {
-		const { itemMap } = useCollectionContext(name + "CollectionConsumer", scope);
-		return itemMap;
+		const { collection } = useStatefulCollectionContext(name + "CollectionConsumer", scope);
+		return collection;
 	}
 	__name(useCollection, "useCollection");
+	function useGetCollection(scope) {
+		const { getCollection } = useStableCollectionContext(name + "CollectionConsumer", scope);
+		return getCollection;
+	}
+	__name(useGetCollection, "useGetCollection");
 	return [{
 		Provider: CollectionProvider,
 		Slot: CollectionSlot,
@@ -496,6 +547,7 @@ function createCollection2(name) {
 	}, {
 		createCollectionScope,
 		useCollection,
+		useGetCollection,
 		useInitCollection
 	}];
 }
@@ -518,6 +570,18 @@ function isElementPreceding(a, b) {
 	return !!(b.compareDocumentPosition(a) & Node.DOCUMENT_POSITION_PRECEDING);
 }
 __name(isElementPreceding, "isElementPreceding");
+function isInDocumentOrder(dict) {
+	let previous;
+	for (const element of dict.keys()) {
+		if (previous) {
+			const position = previous.compareDocumentPosition(element);
+			if (!(position & Node.DOCUMENT_POSITION_DISCONNECTED) && position & Node.DOCUMENT_POSITION_PRECEDING) return false;
+		}
+		previous = element;
+	}
+	return true;
+}
+__name(isInDocumentOrder, "isInDocumentOrder");
 function sortByDocumentPosition(a, b) {
 	return !a[1].element || !b[1].element ? 0 : isElementPreceding(a[1].element, b[1].element) ? -1 : 1;
 }

@@ -9,7 +9,7 @@ var __name = (target, value) => __defProp(target, "name", {
 	value,
 	configurable: true
 });
-var Root = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name(function Label2(props, forwardedRef) {
+var Label = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name(function Label2(props, forwardedRef) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.label, {
 		...props,
 		ref: forwardedRef,
@@ -21,4 +21,4 @@ var Root = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name(functi
 	});
 }, "Label"));
 //#endregion
-export { Root as t };
+export { Label as t };
